@@ -22,6 +22,7 @@ static void init_env(t_env *e)
 	e->option->t = 0;
 }
 
+
 int main(int ac, char **av)
 {
 	t_env *e;
@@ -29,10 +30,9 @@ int main(int ac, char **av)
 	e = malloc(sizeof(t_env));
 	init_env(e);
 	set_opt_dir(e, ac, av);
-
 	if(e->files)
-		display_files(&e->files, e->option);
-	
-}
+		display_files(&e->files, e->option, 0);
+	if(e->dir)
+		display_dir(&e->dir, e->option);
 
 }

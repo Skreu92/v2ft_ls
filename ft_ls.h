@@ -58,7 +58,16 @@ typedef struct 		s_env
 	t_dir *dir;
 }					t_env;
 
+
 void set_opt_dir(t_env *e, int ac, char **av);
-void display_files(t_file **lst,t_opt *option);
+void displayf(t_file **file);
+void display_dir(t_dir **dir,t_opt *option);
+void display_files(t_file **lst,t_opt *option, int total);
+void displayf_l(t_file **file);
+
 void add_lst_file(t_file **file, char *path);
+void add_lst_dir(t_dir **dir, char *path);
+
+void retrieve_dot_files(t_file **begin);
+
 #endif

@@ -20,15 +20,15 @@ static void ft_error_option()
 
 static void add_option(char c, t_opt **opt)
 {
-	if(c == 'l' && (*opt)->l == 0)
+	if(c == 'l')
 		(*opt)->l = 1;
-	else if (c == 'a' && (*opt)->a == 0)
+	else if (c == 'a')
 		(*opt)->a = 1;
-	else if (c == 'R' && (*opt)->R == 0)
+	else if (c == 'R' )
 		(*opt)->R = 1;
-	else if (c == 'r' && (*opt)->r == 0)
+	else if (c == 'r' )
 		(*opt)->r = 1;
-	else if (c == 't' && (*opt)->t == 0)
+	else if (c == 't' )
 		(*opt)->t = 1;
 	else 
 		ft_error_option();
@@ -45,6 +45,7 @@ void add_lst_dir(t_dir **dir, char *path)
 		(*dir) = malloc(sizeof(t_dir));
 		tmp = malloc(sizeof(char) * (ft_strlen(path) + 1));
 		(*dir)->path = ft_strcpy(tmp, path);
+		(*dir)->total = 0;
 		(*dir)->files = NULL;
 		(*dir)->dir = NULL;
 		(*dir)->next = NULL;
@@ -57,6 +58,7 @@ void add_lst_dir(t_dir **dir, char *path)
 		lst->next = malloc(sizeof(t_dir));
 		tmp = malloc(sizeof(char) * (ft_strlen(path) + 1));
 		lst->next->path = ft_strcpy(tmp, path);
+		lst->next->total = 0;
 		lst->next->files = NULL;
 		lst->next->dir = NULL;
 		lst->next->next = NULL;
@@ -78,7 +80,7 @@ void add_lst_file(t_file **file, char *path)
 	else
 	{
 		lst = *file;
-		while(lst->next)
+		while(lst && lst->next)
 			lst = lst->next;
 		lst->next = malloc(sizeof(t_file));
 		tmp = malloc(sizeof(char) * (ft_strlen(path)+1));
