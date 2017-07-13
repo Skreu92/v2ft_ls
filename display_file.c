@@ -46,26 +46,32 @@ void sort_path(t_file **begin)
 		if(ft_strcmp(lst->path, lst->next->path) > 0)
 		{
 			add_lst_file(&tmp, lst->next->path);
-			lst->next = lst->next->next;
+			tmp2 = lst->next->next;
+			free(lst->next);
+			lst->next = tmp2;
 			break ;
 		}
 		else
 			lst = lst->next;
 	}
-	if(!tmp)
-		return ;
 	lst = *begin;
-	while(lst->next && lst->next->path[0] == '.')
-		lst = lst->next;
-	tmp2 = lst->next;
-	lst->next = tmp;
-	if(tmp)
+	tmp2 = NULL;
+	while(lst && lst->path[0] == '.')
 	{
-		while(tmp->next)
-			tmp = tmp->next;
-		tmp->next = malloc(sizeof(t_file));
-		tmp->next = tmp2;
+		add_lst_file(&tmp2, lst->path);
+		lst = lst->next;
 	}
+	while(tmp)
+	{
+		add_lst_file(&tmp2, tmp->path);
+		tmp = tmp->next;
+	}
+	while(lst)
+	{
+		add_lst_file(&tmp2, lst->path);
+		lst = lst->next;
+	}
+	(*begin) = tmp2;
 }
 
 int compare(char *path1, char *path2)
@@ -75,8 +81,6 @@ int compare(char *path1, char *path2)
 
 	stat(path1, &buf);
 	stat(path2, &buf2);
-
-
 	if(buf.st_mtime > buf2.st_mtime)
 		return (1);
 	else if(buf.st_mtime == buf2.st_mtime && (ft_strcmp(path1, path2) < 0 ))
@@ -84,36 +88,30 @@ int compare(char *path1, char *path2)
 	else
 		return (0);
 }
-void sort_time(t_file **begin)
-{
-	t_file *top;
-	t_file *curr;
-	t_file *prev;
-	t_file *largest;
 
-	top = (*begin);
-	curr = top;
-	largest = top;
-	prev = NULL;
-    while(curr != NULL) 
+void sort_time(t_file **begin, char *path)
+{
+	t_file *curr;
+	t_file *next;
+	char *tmp;
+
+	curr = (*begin);
+    while(curr && curr->next != NULL) 
     {
-        if(prev && (compare(curr->path, prev->path)))
+    	next = curr->next;
+        if((!compare(ft_strjoin(path,curr->path),ft_strjoin(path, next->path))))
         {
-            largest = curr;
-        	prev->next = curr->next;
-        	largest->next = top;
-        	top = largest;
+            tmp = curr->path;
+            curr->path = next->path;
+   			next->path = tmp;
+   			curr = (*begin);
         }
-        prev = curr;
-        curr = curr->next;
+        else
+        	curr = curr->next;
     }
-    if(prev == NULL) {
-        largest->next = top;
-    }
-    (*begin) = largest;
 }
 
-void reverse_lst(t_file **begin)
+void reverse_lst_file(t_file **begin)
 {
 	t_file *prev;
 	t_file *current;
@@ -131,8 +129,26 @@ void reverse_lst(t_file **begin)
 	(*begin) = prev;
 }
 
+void reverse_lst_dir(t_dir **begin)
+{
+	t_dir *prev;
+	t_dir *current;
+	t_dir *next;
 
-void display_files(t_file **file ,t_opt *option, int total)
+	prev = NULL;
+	current = (*begin);
+	while(current != NULL)
+    {
+        next  = current->next;  
+        current->next = prev;   
+        prev = current;
+        current = next;
+    }
+	(*begin) = prev;
+}
+
+
+void display_files(t_file **file ,t_opt *option, char *path)
 {
 	t_file *lst;
 
@@ -141,20 +157,12 @@ void display_files(t_file **file ,t_opt *option, int total)
 	if(option->a == 0)
 		retrieve_dot_files(&lst);
 	if(option->t == 1)
-		sort_time(&lst);
-	if(option->r == 1)
-		reverse_lst(&lst);
-
+		sort_time(&lst, ft_strjoin(path, "/"));
 	if(option->l == 0)
 		displayf(&lst);
 	else
 	{
-		if(total)
-		{
-			write(1, "total ", 6);
-			ft_putnbr(total);
-			write(1, "\n", 1);
-		}
-		displayf_l(&lst);
+		displayf_l(&lst, path);
 	}
+
 }

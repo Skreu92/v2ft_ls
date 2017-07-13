@@ -22,6 +22,7 @@
 # include <sys/stat.h>
 # include <sys/ioctl.h>
 # include <sys/xattr.h>
+# include <sys/acl.h>
 # include <pwd.h>
 # include <grp.h>
 # include <time.h>
@@ -62,12 +63,15 @@ typedef struct 		s_env
 void set_opt_dir(t_env *e, int ac, char **av);
 void displayf(t_file **file);
 void display_dir(t_dir **dir,t_opt *option);
-void display_files(t_file **lst,t_opt *option, int total);
-void displayf_l(t_file **file);
+void display_files(t_file **lst,t_opt *option, char *path);
+void displayf_l(t_file **file, char *path);
 
 void add_lst_file(t_file **file, char *path);
 void add_lst_dir(t_dir **dir, char *path);
 
 void retrieve_dot_files(t_file **begin);
+void sort_path(t_file **begin);
+void reverse_lst_file(t_file **begin);
+void reverse_lst_dir(t_dir **begin);
 
 #endif

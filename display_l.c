@@ -12,10 +12,32 @@
 
 #include "ft_ls.h"
 
+
+void print_acl(mode_t mode, char *path)
+{
+	ssize_t	buflen;
+	acl_t	a;
+
+	(S_ISLNK(mode)) ? (buflen = listxattr(path,\
+	(char*)NULL, 0, XATTR_NOFOLLOW)) : (buflen = listxattr(path, (char*)NULL, 0, 0));
+	(S_ISLNK(mode)) ? (a = acl_get_link_np(path,\
+	ACL_TYPE_EXTENDED)) : (a = acl_get_file(path, ACL_TYPE_EXTENDED));
+	if (buflen > 0)
+		ft_putchar('@');
+	else if (a != NULL)
+		ft_putchar('+');
+	else
+		ft_putchar(' ');
+}
+
 void put_st_mod(mode_t mode, char *path)
 {
-	(void)path;
-	(mode & S_IFDIR) ? ft_putchar('d') : ft_putchar('-');
+	if(S_ISDIR(mode)) 
+		 ft_putchar('d') ;
+	else if(S_ISLNK(mode))
+		ft_putchar('l');
+	else
+		ft_putchar('-');
 	mode = mode & ~S_IFMT;
 	(mode & S_IRUSR) ? ft_putchar('r') : ft_putchar('-');
 	(mode & S_IWUSR) ? ft_putchar('w') : ft_putchar('-');
@@ -26,7 +48,7 @@ void put_st_mod(mode_t mode, char *path)
 	(mode & S_IROTH) ? ft_putchar('r') : ft_putchar('-');
 	(mode & S_IWOTH) ? ft_putchar('w') : ft_putchar('-');
 	(mode & S_IXOTH) ? ft_putchar('x') : ft_putchar('-');
-	ft_putchar(' ');
+	print_acl(mode, path);
 }
 
 void print_links(nlink_t link)
@@ -55,6 +77,9 @@ void print_group(gid_t group)
 
 void print_size(off_t size)
 {
+	ft_putchar(' ');
+	if (size < 1000000)
+		ft_putchar(' ');
 	if (size < 100000)
 		ft_putchar(' ');
 	if (size < 10000)
@@ -104,6 +129,8 @@ void print_date(time_t timer)
 
 	tm_info = localtime(&timer);
 	ft_putchar(' ');
+	if(tm_info->tm_mday < 10 )
+		ft_putchar(' ');
 	ft_putnbr(tm_info->tm_mday);
 	ft_putchar(' ');
 	ft_putstr(get_month(tm_info->tm_mon));
@@ -118,16 +145,19 @@ void print_date(time_t timer)
 	ft_putchar(' ');
 }
 
-void displayf_l(t_file **begin)
+void displayf_l(t_file **begin, char *path)
 {
 	t_file *file;
 	struct stat info;
-
+	char *tmp;
+	char *tmp2;
 	file = (*begin);
 	while (file)
 	{
-		stat(file->path, &info);
-		put_st_mod(info.st_mode, file->path);
+		tmp2 = ft_strjoin(path, "/");
+		tmp = ft_strjoin(tmp2, file->path);
+		stat(tmp, &info);
+		put_st_mod(info.st_mode, tmp);
 		print_links(info.st_nlink);
 		print_user(info.st_uid);
 		print_group(info.st_gid);
@@ -136,5 +166,7 @@ void displayf_l(t_file **begin)
 		ft_putstr(file->path);
 		write(1, "\n", 1);
 		file = file->next;
+		free(tmp);
+		free(tmp2);
 	}	
 }

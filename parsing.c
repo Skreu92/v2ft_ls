@@ -38,13 +38,11 @@ static void add_option(char c, t_opt **opt)
 void add_lst_dir(t_dir **dir, char *path)
 {
 	t_dir *lst;
-	char *tmp;
 
 	if(!(*dir))
 	{
 		(*dir) = malloc(sizeof(t_dir));
-		tmp = malloc(sizeof(char) * (ft_strlen(path) + 1));
-		(*dir)->path = ft_strcpy(tmp, path);
+		(*dir)->path = ft_strdup(path);
 		(*dir)->total = 0;
 		(*dir)->files = NULL;
 		(*dir)->dir = NULL;
@@ -56,8 +54,7 @@ void add_lst_dir(t_dir **dir, char *path)
 		while(lst->next)
 			lst = lst->next;
 		lst->next = malloc(sizeof(t_dir));
-		tmp = malloc(sizeof(char) * (ft_strlen(path) + 1));
-		lst->next->path = ft_strcpy(tmp, path);
+		lst->next->path = ft_strdup(path);
 		lst->next->total = 0;
 		lst->next->files = NULL;
 		lst->next->dir = NULL;
@@ -68,13 +65,11 @@ void add_lst_dir(t_dir **dir, char *path)
 void add_lst_file(t_file **file, char *path)
 {
 	t_file *lst;
-	char *tmp;
 
 	if(!(*file))
 	{
-		(*file) = malloc(sizeof(t_file));
-		tmp = malloc(sizeof(char) * (ft_strlen(path) + 1));
-		(*file)->path = ft_strcpy(tmp, path);
+		(*file) = (t_file *)malloc(sizeof(t_file));
+		(*file)->path = ft_strdup(path);
 		(*file)->next = NULL;
 	}
 	else
@@ -82,9 +77,8 @@ void add_lst_file(t_file **file, char *path)
 		lst = *file;
 		while(lst && lst->next)
 			lst = lst->next;
-		lst->next = malloc(sizeof(t_file));
-		tmp = malloc(sizeof(char) * (ft_strlen(path)+1));
-		lst->next->path = ft_strcpy(tmp, path);
+		lst->next = (t_file *)malloc(sizeof(t_file));
+		lst->next->path = ft_strdup(path);
 		lst->next->next = NULL;
 	}
 }
