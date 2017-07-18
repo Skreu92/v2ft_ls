@@ -18,10 +18,8 @@ void print_acl(mode_t mode, char *path)
 	ssize_t	buflen;
 	acl_t	a;
 
-	(S_ISLNK(mode)) ? (buflen = listxattr(path,\
-	(char*)NULL, 0, XATTR_NOFOLLOW)) : (buflen = listxattr(path, (char*)NULL, 0, 0));
-	(S_ISLNK(mode)) ? (a = acl_get_link_np(path,\
-	ACL_TYPE_EXTENDED)) : (a = acl_get_file(path, ACL_TYPE_EXTENDED));
+	(S_ISLNK(mode)) ? (buflen = listxattr(path,(char*)NULL, 0, XATTR_NOFOLLOW)) : (buflen = listxattr(path, (char*)NULL, 0, 0));
+	(S_ISLNK(mode)) ? (a = acl_get_link_np(path, ACL_TYPE_EXTENDED)) : (a = acl_get_file(path, ACL_TYPE_EXTENDED));
 	if (buflen > 0)
 		ft_putchar('@');
 	else if (a != NULL)
@@ -48,7 +46,8 @@ void put_st_mod(mode_t mode, char *path)
 	(mode & S_IROTH) ? ft_putchar('r') : ft_putchar('-');
 	(mode & S_IWOTH) ? ft_putchar('w') : ft_putchar('-');
 	(mode & S_IXOTH) ? ft_putchar('x') : ft_putchar('-');
-	print_acl(mode, path);
+	(void)path;
+	//print_acl(mode, path);
 }
 
 void print_links(nlink_t link)
@@ -144,7 +143,33 @@ void print_date(time_t timer)
 	ft_putnbr(tm_info->tm_min);
 	ft_putchar(' ');
 }
+void check_lnk(char *direc, char *file)
+{
+	DIR *dirp;
+	struct dirent *dir;
 
+	dirp = opendir(direc);
+	char *buf;
+	int end;
+	struct stat tmp;
+	while((dir = readdir(dirp)) != NULL)
+	{
+		if(ft_strcmp(dir->d_name, file) == 0)
+		{
+			if(dir->d_type == DT_LNK && (lstat(ft_strjoin(ft_strjoin(direc, "/"),file), &tmp) == 0))
+			{
+				buf = (char *)malloc(sizeof(char) * 255);
+				end = readlink( ft_strjoin(ft_strjoin(direc, "/"),file), buf, 255);
+				buf[end] = '\0';
+				ft_putstr(" -> ");
+				ft_putstr(buf);
+				write(1, "\n", 1);
+				return ;
+			}
+		}
+	}
+
+}
 void displayf_l(t_file **begin, char *path)
 {
 	t_file *file;
@@ -157,6 +182,8 @@ void displayf_l(t_file **begin, char *path)
 		tmp2 = ft_strjoin(path, "/");
 		tmp = ft_strjoin(tmp2, file->path);
 		stat(tmp, &info);
+		if(stat(tmp, &info) == -1)
+			lstat(tmp, &info);
 		put_st_mod(info.st_mode, tmp);
 		print_links(info.st_nlink);
 		print_user(info.st_uid);
@@ -165,7 +192,9 @@ void displayf_l(t_file **begin, char *path)
 		print_date(info.st_mtime);
 		ft_putstr(file->path);
 		write(1, "\n", 1);
+		//check_lnk(path, file->path);
 		file = file->next;
+
 		free(tmp);
 		free(tmp2);
 	}	

@@ -26,6 +26,7 @@
 # include <pwd.h>
 # include <grp.h>
 # include <time.h>
+# include <errno.h>
 
 typedef struct 		s_opt
 {
@@ -65,6 +66,7 @@ void displayf(t_file **file);
 void display_dir(t_dir **dir,t_opt *option);
 void display_files(t_file **lst,t_opt *option, char *path);
 void displayf_l(t_file **file, char *path);
+void display_name(t_dir *dir);
 
 void add_lst_file(t_file **file, char *path);
 void add_lst_dir(t_dir **dir, char *path);
@@ -73,5 +75,8 @@ void retrieve_dot_files(t_file **begin);
 void sort_path(t_file **begin);
 void reverse_lst_file(t_file **begin);
 void reverse_lst_dir(t_dir **begin);
+void file_free(t_file *file);
+void dir_free(t_dir *dir);
+void release_lst_dir(t_dir *lst);
 
 #endif

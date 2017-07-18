@@ -23,26 +23,30 @@ void get_all_files(t_dir **lst, int a)
 
 	direc = (*lst);
 	dirp = opendir(direc->path);
+	if(!dirp)
+		return ;
 	while((dir = readdir(dirp)) != NULL)
 	{
-		tmp = ft_strjoin(direc->path,"/");
-		tmp = ft_strjoin(tmp, dir->d_name);
+		tmp2 = ft_strjoin(direc->path,"/");
+		tmp = ft_strjoin(tmp2, dir->d_name);
+		free(tmp2);
 		stat(tmp , &info);
 		direc->total += info.st_blocks;
 		add_lst_file(&direc->files, dir->d_name);
+		free(tmp);
 		if(dir->d_type == DT_DIR && ft_strcmp("..", dir->d_name) && ft_strcmp(".", dir->d_name))
 		{
-			tmp = malloc(sizeof(char) * (ft_strlen(direc->path) + dir->d_namlen + 2));
 			tmp2 = ft_strjoin(direc->path, "/");
 			tmp = ft_strjoin(tmp2, dir->d_name);
+			free(tmp2);
 			if(a == 0 && !(dir->d_name[0] == '.'))
 				add_lst_dir(&direc->dir, tmp);
-			if(a == 1)
+			if (a == 1)
 				add_lst_dir(&direc->dir,tmp);
 			free(tmp);
 		}
 	}
-	closedir(dirp);
+	(void)closedir(dirp);
 }
 
 void display_name(t_dir *dir)
@@ -123,33 +127,63 @@ void retrieve_dot_dir(t_file **begin)
 	}
 }
 
+void release_lst_file(t_file *lst)
+{
+	t_file *tmp;
+
+	while(lst)
+	{
+		tmp = lst->next;
+		file_free(lst);
+		lst = tmp;
+	}
+}
+
+void release_lst_dir(t_dir *lst)
+{
+	t_dir *tmp;
+
+	while(lst)
+	{
+		tmp = lst->next;
+		dir_free(lst);
+		lst = tmp;
+	}
+}
+
+void put_total(int total)
+{
+	write(1, "total ", 6);
+	ft_putnbr(total);
+	write(1, "\n", 1);
+}
+
 void display_dir(t_dir **dir,t_opt *option)
 {
 	t_dir *lst;
-
+	t_dir *tmp;
 	lst = (*dir);
 	if(lst)
 	{
 		get_all_files(&lst, option->a);
 		if(option->l)
-		{
-			write(1, "total ", 6);
-			ft_putnbr(lst->total);
-			write(1, "\n", 1);
-		}
+			put_total(lst->total);
 		if(option->r)
 		{
 			reverse_lst_file(&lst->files);
 			reverse_lst_dir(&lst->dir);
 		}
 		display_files(&lst->files, option, lst->path);
+		release_lst_file(lst->files);
 		if(option->R == 1 && lst->dir != NULL)
 		{
 			while(lst->dir)
 			{
+				tmp = lst->dir;
 				display_name(lst->dir);
 				display_dir(&lst->dir, option);
 				lst->dir = lst->dir->next;
+				dir_free(tmp);
 			}
 		}
 	}

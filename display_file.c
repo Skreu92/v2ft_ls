@@ -14,20 +14,21 @@
 
 void retrieve_dot_files(t_file **begin)
 {
-	t_file *lst;
-	t_file *tmp;
+	t_file *curr;
+	t_file *next;
 
-	lst = *begin;
-	while(lst && lst->path[0] == '.')
-		lst = lst->next;
-	*begin = lst;
-	while(lst && lst->next)
+	curr = *begin;
+	while(curr && curr->next)
 	{
-		tmp = lst->next;
-		if(tmp->path[0] == '.')
-			lst->next = tmp->next;
+		next = curr->next;
+		if(next->path[0] == '.')
+		{
+			curr->next = next->next;
+			free(next->path);
+			free(next);
+		}
 		else
-			lst = lst->next;
+			curr = curr->next;
 	}
 }
 
@@ -81,6 +82,8 @@ int compare(char *path1, char *path2)
 
 	stat(path1, &buf);
 	stat(path2, &buf2);
+	free(path1);
+	free(path2);
 	if(buf.st_mtime > buf2.st_mtime)
 		return (1);
 	else if(buf.st_mtime == buf2.st_mtime && (ft_strcmp(path1, path2) < 0 ))
@@ -94,12 +97,14 @@ void sort_time(t_file **begin, char *path)
 	t_file *curr;
 	t_file *next;
 	char *tmp;
-
+	char *tmp2;
 	curr = (*begin);
     while(curr && curr->next != NULL) 
     {
     	next = curr->next;
-        if((!compare(ft_strjoin(path,curr->path),ft_strjoin(path, next->path))))
+    	tmp = ft_strjoin(path, curr->path);
+    	tmp2 = ft_strjoin(path, next->path);
+        if(next->next && (!compare(tmp,tmp2)))
         {
             tmp = curr->path;
             curr->path = next->path;
@@ -109,6 +114,8 @@ void sort_time(t_file **begin, char *path)
         else
         	curr = curr->next;
     }
+    free(tmp);
+    free(tmp2);
 }
 
 void reverse_lst_file(t_file **begin)
@@ -151,18 +158,22 @@ void reverse_lst_dir(t_dir **begin)
 void display_files(t_file **file ,t_opt *option, char *path)
 {
 	t_file *lst;
+	char *tmp;
 
 	lst = (*file);
-	sort_path(&lst);
+	tmp = ft_strjoin(path, "/");
+	//sort_path(&lst);
 	if(option->a == 0)
 		retrieve_dot_files(&lst);
+	if(option->r == 1)
+		reverse_lst_file(&lst);
 	if(option->t == 1)
-		sort_time(&lst, ft_strjoin(path, "/"));
+		sort_time(&lst, tmp);
+	free(tmp);
 	if(option->l == 0)
 		displayf(&lst);
 	else
 	{
 		displayf_l(&lst, path);
 	}
-
 }

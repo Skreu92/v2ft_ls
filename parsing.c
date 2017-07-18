@@ -118,14 +118,11 @@ void set_opt_dir(t_env *e, int ac, char **av)
 	e->files = NULL;
 	e->dir = NULL;
 	while (i < ac)
-	{
-		
+	{		
+		j = 0;
 		if(av[i][0] == '-' && !e->files && !e->dir)
-		{
-			j = 0;
 			while(av[i][++j])
 				add_option(av[i][j], &e->option);
-		}
 		else
 			add_file_dir(av[i], e);
 		i++;

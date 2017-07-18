@@ -29,10 +29,6 @@ void file_free(t_file *file)
 void dir_free(t_dir *dir)
 {
 	free(dir->path);
-	if(dir->files)
-		file_free(dir->files);
-	if(dir->dir)
-		dir_free(dir->dir);
 	free(dir);
 }
 void release_env(t_env *e)
@@ -59,7 +55,6 @@ int main(int ac, char **av)
 {
 	t_env *e;
 	t_dir *tmp;
-
 	e = (t_env *)malloc(sizeof(t_env));
 	e->option = (t_opt *)malloc(sizeof(t_opt));
 	init_env(e);
@@ -68,18 +63,16 @@ int main(int ac, char **av)
 		display_files(&e->files, e->option, ".");
 	if(e->files && e->dir)
 		write(1, "\n", 1);
+	tmp = e->dir;
 	while(e->dir)
 	{
-		if(ft_strcmp(e->dir->path, ".") != 0 && !e->dir->next)
+
+		if(ft_strcmp(e->dir->path, ".") != 0)
 		{
 			write(1, e->dir->path, ft_strlen(e->dir->path));
 			write(1, ":\n", 2);
 		}
 		display_dir(&e->dir, e->option);
-		tmp = e->dir;
 		e->dir = e->dir->next;
 	}
-	free(e->option);
-	free(e);
-
 }
