@@ -26,29 +26,11 @@ void file_free(t_file *file)
 	free(file->path);
 	free(file);
 }
+
 void dir_free(t_dir *dir)
 {
 	free(dir->path);
 	free(dir);
-}
-void release_env(t_env *e)
-{
-	t_file *tmp_file;
-	t_dir *tmp_dir;
-
-	while(e->files)
-	{
-		tmp_file = e->files;
-		e->files = e->files->next;
-		file_free(tmp_file);
-	}
-	while(e->dir)
-	{
-		tmp_dir = e->dir;
-		e->dir = e->dir->next;
-		dir_free(tmp_dir);
-	}
-	free(e->option);
 }
 
 int main(int ac, char **av)
@@ -63,16 +45,16 @@ int main(int ac, char **av)
 		display_files(&e->files, e->option, ".");
 	if(e->files && e->dir)
 		write(1, "\n", 1);
-	tmp = e->dir;
 	while(e->dir)
 	{
-
 		if(ft_strcmp(e->dir->path, ".") != 0)
 		{
 			write(1, e->dir->path, ft_strlen(e->dir->path));
 			write(1, ":\n", 2);
 		}
 		display_dir(&e->dir, e->option);
+		tmp = e->dir;
 		e->dir = e->dir->next;
 	}
+	return (0);
 }

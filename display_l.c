@@ -163,7 +163,6 @@ void check_lnk(char *direc, char *file)
 				buf[end] = '\0';
 				ft_putstr(" -> ");
 				ft_putstr(buf);
-				write(1, "\n", 1);
 				return ;
 			}
 		}
@@ -191,8 +190,8 @@ void displayf_l(t_file **begin, char *path)
 		print_size(info.st_size);
 		print_date(info.st_mtime);
 		ft_putstr(file->path);
-		write(1, "\n", 1);
 		//check_lnk(path, file->path);
+		write(1, "\n", 1);
 		file = file->next;
 
 		free(tmp);

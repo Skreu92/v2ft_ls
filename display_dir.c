@@ -12,6 +12,7 @@
 
 #include "ft_ls.h"
 
+
 void get_all_files(t_dir **lst, int a)
 {
 	DIR *dirp;
@@ -139,18 +140,6 @@ void release_lst_file(t_file *lst)
 	}
 }
 
-void release_lst_dir(t_dir *lst)
-{
-	t_dir *tmp;
-
-	while(lst)
-	{
-		tmp = lst->next;
-		dir_free(lst);
-		lst = tmp;
-	}
-}
-
 void put_total(int total)
 {
 	write(1, "total ", 6);
@@ -163,6 +152,7 @@ void display_dir(t_dir **dir,t_opt *option)
 	t_dir *lst;
 	t_dir *tmp;
 	lst = (*dir);
+
 	if(lst)
 	{
 		get_all_files(&lst, option->a);
@@ -176,7 +166,6 @@ void display_dir(t_dir **dir,t_opt *option)
 		display_files(&lst->files, option, lst->path);
 		release_lst_file(lst->files);
 		if(option->R == 1 && lst->dir != NULL)
-		{
 			while(lst->dir)
 			{
 				tmp = lst->dir;
@@ -185,6 +174,5 @@ void display_dir(t_dir **dir,t_opt *option)
 				lst->dir = lst->dir->next;
 				dir_free(tmp);
 			}
-		}
 	}
 }
