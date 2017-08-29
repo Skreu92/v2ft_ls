@@ -20,6 +20,7 @@ void			sort_time(t_file **begin, char *path)
 	char	*tmp2;
 
 	curr = (*begin);
+	printf("coucou\n");
 	while (curr && curr->next != NULL)
 	{
 		next = curr->next;
@@ -32,9 +33,9 @@ void			sort_time(t_file **begin, char *path)
 			next->path = tmp;
 			curr = (*begin);
 		}
-		else
-			curr = curr->next;
+		curr = curr->next;
 	}
+	printf("bye\n");
 }
 
 void			reverse_lst_file(t_file **begin)

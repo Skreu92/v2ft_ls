@@ -21,7 +21,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 	if (!s1 && s2)
 		return ((char *)s2);
-	if(!s2 && s1)
+	if (!s2 && s1)
 		return ((char *)s1);
 	if (!s1 && !s2)
 		return (NULL);

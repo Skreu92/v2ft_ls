@@ -14,7 +14,6 @@
 
 void				print_size(off_t size)
 {
-	ft_putchar(' ');
 	if (size < 1000000)
 		ft_putchar(' ');
 	if (size < 100000)
@@ -34,29 +33,29 @@ void				print_size(off_t size)
 char				*get_month(int i)
 {
 	if (i == 0)
-		return ("jan");
+		return ("Jan");
 	if (i == 1)
-		return ("fev");
+		return ("Fev");
 	if (i == 2)
-		return ("mar");
+		return ("Mar");
 	if (i == 3)
-		return ("avr");
+		return ("Avr");
 	if (i == 4)
-		return ("mai");
+		return ("Mai");
 	if (i == 5)
-		return ("jun");
+		return ("Jun");
 	if (i == 6)
-		return ("jul");
+		return ("Jul");
 	if (i == 7)
-		return ("aug");
+		return ("Aug");
 	if (i == 8)
-		return ("sep");
+		return ("Sep");
 	if (i == 9)
-		return ("oct");
+		return ("Oct");
 	if (i == 10)
-		return ("nov");
+		return ("Nov");
 	if (i == 11)
-		return ("dec");
+		return ("Dec");
 	return ("");
 }
 
@@ -65,7 +64,6 @@ void				print_date(time_t timer)
 	struct tm	*tm_info;
 
 	tm_info = localtime(&timer);
-	ft_putchar(' ');
 	if (tm_info->tm_mday < 10)
 		ft_putchar(' ');
 	ft_putnbr(tm_info->tm_mday);

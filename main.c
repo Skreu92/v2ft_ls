@@ -27,7 +27,7 @@ void				release_lst_file(t_file *lst)
 static void			init_env(t_env *e)
 {
 	e->option->a = 0;
-	e->option->R = 0;
+	e->option->rc = 0;
 	e->option->r = 0;
 	e->option->l = 0;
 	e->option->t = 0;

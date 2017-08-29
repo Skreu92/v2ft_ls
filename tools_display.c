@@ -53,6 +53,7 @@ void			put_st_mod(mode_t mode, char *path)
 void			print_links(nlink_t link)
 {
 	ft_putchar(' ');
+	ft_putchar(' ');
 	if (link < 100)
 		ft_putchar(' ');
 	if (link < 10)
@@ -71,5 +72,4 @@ void			print_group(gid_t group)
 {
 	ft_putchar(' ');
 	ft_putstr(((getgrgid(group)))->gr_name);
-	ft_putchar(' ');
 }

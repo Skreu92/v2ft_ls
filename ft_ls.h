@@ -32,7 +32,7 @@
 typedef struct		s_opt
 {
 	int				a;
-	int				R;
+	int				rc;
 	int				r;
 	int				l;
 	int				t;
@@ -80,6 +80,7 @@ void				reverse_lst_dir(t_dir **begin);
 void				file_free(t_file *file);
 void				dir_free(t_dir *dir);
 void				release_lst_dir(t_dir *lst);
+int					get_width_buf(t_file *lst);
 
 void				put_total(int total);
 void				ft_error_option(void);
@@ -90,6 +91,5 @@ void				print_links(nlink_t link);
 void				print_user(uid_t user);
 void				print_group(gid_t group);
 void				display_name(t_dir *dir);
-
 
 #endif

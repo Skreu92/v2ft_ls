@@ -12,18 +12,18 @@
 
 #include "ft_ls.h"
 
-void			check_add(t_dir *dir, int a)
+void			check_add(char *name, t_dir *dir, int a)
 {
 	char			*tmp;
 	char			*tmp2;
 
-	tmp2 = ft_strjoin((*lst)->path, "/");
-	tmp = ft_strjoin(tmp2, dir->d_name);
+	tmp2 = ft_strjoin(dir->path, "/");
+	tmp = ft_strjoin(tmp2, name);
 	free(tmp2);
-	if (a == 0 && !(dir->d_name[0] == '.'))
-		add_lst_dir(&(*lst)->dir, tmp);
+	if (a == 0 && !(name[0] == '.'))
+		add_lst_dir(&dir->dir, tmp);
 	if (a == 1)
-		add_lst_dir(&(*lst)->dir, tmp);
+		add_lst_dir(&dir->dir, tmp);
 	free(tmp);
 }
 
@@ -49,7 +49,7 @@ void			get_all_files(t_dir **lst, int a)
 		free(tmp);
 		if (dir->d_type == DT_DIR && ft_strcmp("..", dir->d_name) &&
 			ft_strcmp(".", dir->d_name))
-			check_add((*lst)->dir, a);
+			check_add(dir->d_name, (*lst), a);
 	}
 	(void)closedir(dirp);
 }
@@ -105,7 +105,7 @@ void			display_dir(t_dir **dir, t_opt *option)
 			reverse_lst_dir(&lst->dir);
 		display_files(&lst->files, option, lst->path);
 		release_lst_file(lst->files);
-		if (option->R == 1 && lst->dir != NULL)
+		if (option->rc == 1 && lst->dir != NULL)
 			while (lst->dir)
 			{
 				tmp = lst->dir;

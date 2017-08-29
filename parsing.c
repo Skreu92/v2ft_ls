@@ -19,7 +19,7 @@ static void				add_option(char c, t_opt **opt)
 	else if (c == 'a')
 		(*opt)->a = 1;
 	else if (c == 'R')
-		(*opt)->R = 1;
+		(*opt)->rc = 1;
 	else if (c == 'r')
 		(*opt)->r = 1;
 	else if (c == 't')
