@@ -12,12 +12,6 @@
 
 #include "ft_ls.h"
 
-static void				ft_error_option(void)
-{
-	write(1, "ls: illegal option\n", 19);
-	write(1, "usage: ls [-lRart] [file ...]\n", 31);
-}
-
 static void				add_option(char c, t_opt **opt)
 {
 	if (c == 'l')

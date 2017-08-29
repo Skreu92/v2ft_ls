@@ -19,7 +19,9 @@ SRC= main.c\
 	display_dir.c\
 	display_file.c\
 	display_l.c\
-
+	tools_dir.c\
+	tools_file.c\
+	tools_display.c\
 
 NAME = ft_ls
 CC = gcc

@@ -12,6 +12,7 @@
 
 #ifndef FT_LS_H
 # define FT_LS_H
+# define JOIN(a,b) ft_strjoin(a,b)
 
 # include "libft/libft.h"
 # include <stdio.h>
@@ -70,6 +71,8 @@ void				display_name(t_dir *dir);
 void				add_lst_file(t_file **file, char *path);
 void				add_lst_dir(t_dir **dir, char *path);
 
+void				sort_time(t_file **begin, char *path);
+
 void				retrieve_dot_files(t_file **begin);
 void				sort_path(t_file **begin);
 void				reverse_lst_file(t_file **begin);
@@ -77,5 +80,16 @@ void				reverse_lst_dir(t_dir **begin);
 void				file_free(t_file *file);
 void				dir_free(t_dir *dir);
 void				release_lst_dir(t_dir *lst);
+
+void				put_total(int total);
+void				ft_error_option(void);
+void				release_lst_file(t_file *lst);
+int					compare(char *path1, char *path2);
+void				put_st_mod(mode_t mode, char *path);
+void				print_links(nlink_t link);
+void				print_user(uid_t user);
+void				print_group(gid_t group);
+void				display_name(t_dir *dir);
+
 
 #endif

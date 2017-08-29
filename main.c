@@ -12,6 +12,18 @@
 
 #include "ft_ls.h"
 
+void				release_lst_file(t_file *lst)
+{
+	t_file *tmp;
+
+	while (lst)
+	{
+		tmp = lst->next;
+		file_free(lst);
+		lst = tmp;
+	}
+}
+
 static void			init_env(t_env *e)
 {
 	e->option->a = 0;
