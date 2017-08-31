@@ -12,20 +12,27 @@
 
 #include "ft_ls.h"
 
-static void				add_option(char c, t_opt **opt)
+t_file		*create_file(char *path)
 {
-	if (c == 'l')
-		(*opt)->l = 1;
-	else if (c == 'a')
-		(*opt)->a = 1;
-	else if (c == 'R')
-		(*opt)->rc = 1;
-	else if (c == 'r')
-		(*opt)->r = 1;
-	else if (c == 't')
-		(*opt)->t = 1;
-	else
-		ft_error_option();
+	t_file *file;
+
+	file = (t_file *)malloc(sizeof(t_file));
+	file->path = ft_strdup(path);
+	file->next = NULL;
+	return (file);
+}
+
+t_dir		*create_dir(char *path)
+{
+	t_dir *dir;
+
+	dir = (t_dir *)malloc(sizeof(t_dir));
+	dir->path = ft_strdup(path);
+	dir->total = 0;
+	dir->files = NULL;
+	dir->dir = NULL;
+	dir->next = NULL;
+	return (dir);
 }
 
 void					add_lst_dir(t_dir **dir, char *path)
@@ -34,24 +41,14 @@ void					add_lst_dir(t_dir **dir, char *path)
 
 	if (!(*dir))
 	{
-		(*dir) = malloc(sizeof(t_dir));
-		(*dir)->path = ft_strdup(path);
-		(*dir)->total = 0;
-		(*dir)->files = NULL;
-		(*dir)->dir = NULL;
-		(*dir)->next = NULL;
+		(*dir) = create_dir(path);
 	}
 	else
 	{
 		lst = *dir;
 		while (lst->next)
 			lst = lst->next;
-		lst->next = malloc(sizeof(t_dir));
-		lst->next->path = ft_strdup(path);
-		lst->next->total = 0;
-		lst->next->files = NULL;
-		lst->next->dir = NULL;
-		lst->next->next = NULL;
+		lst->next = create_dir(path);
 	}
 }
 
@@ -61,18 +58,14 @@ void					add_lst_file(t_file **file, char *path)
 
 	if (!(*file))
 	{
-		(*file) = (t_file *)malloc(sizeof(t_file));
-		(*file)->path = ft_strdup(path);
-		(*file)->next = NULL;
+		(*file) = create_file(path);
 	}
 	else
 	{
 		lst = *file;
 		while (lst && lst->next)
 			lst = lst->next;
-		lst->next = (t_file *)malloc(sizeof(t_file));
-		lst->next->path = ft_strdup(path);
-		lst->next->next = NULL;
+		lst->next = create_file(path);
 	}
 }
 

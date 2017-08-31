@@ -12,30 +12,30 @@
 
 #include "ft_ls.h"
 
-void			sort_time(t_file **begin, char *path)
+void			sort_time(t_file **begin)
 {
 	t_file	*curr;
 	t_file	*next;
 	char	*tmp;
-	char	*tmp2;
+	time_t	timetmp;
 
 	curr = (*begin);
-	printf("coucou\n");
 	while (curr && curr->next != NULL)
 	{
 		next = curr->next;
-		tmp = ft_strjoin(path, curr->path);
-		tmp2 = ft_strjoin(path, next->path);
-		if (next && (!compare(tmp, tmp2)))
+		if (next && !(compare(curr, next)))
 		{
 			tmp = curr->path;
+			timetmp = curr->time;
 			curr->path = next->path;
+			curr->time = next->time;
 			next->path = tmp;
+			next->time = timetmp;
 			curr = (*begin);
 		}
-		curr = curr->next;
+		else
+			curr = curr->next;
 	}
-	printf("bye\n");
 }
 
 void			reverse_lst_file(t_file **begin)

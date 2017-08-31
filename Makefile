@@ -11,11 +11,13 @@
 # **************************************************************************** #
 
 
-FLAGS= -Wall -Werror -Wextra -O0 -g -fsanitize=address
+FLAGS= -Wall -Werror -Wextra 
+/*-O0 -g -fsanitize=address*/
 
 
 SRC= main.c\
 	parsing.c\
+	display.c\
 	display_dir.c\
 	display_file.c\
 	display_l.c\
@@ -52,6 +54,7 @@ clean:
 
 fclean: clean
 	@$(RM) $(NAME)
+	@make -C libft/ fclean
 	@echo "\033[K$(CY)[FT_LS] :$(CE) $(CG)Cleaning FT_LS $(CE)";
 
 re: fclean all

@@ -41,6 +41,7 @@ typedef struct		s_opt
 typedef struct		s_file
 {
 	char			*path;
+	time_t			time;
 	struct s_file	*next;
 }					t_file;
 
@@ -49,6 +50,7 @@ typedef struct		s_dir
 	char			*path;
 	int				buflen;
 	int				total;
+	time_t			time;
 	struct s_file	*files;
 	struct s_dir	*dir;
 	struct s_dir	*next;
@@ -61,6 +63,7 @@ typedef struct		s_env
 	t_dir			*dir;
 }					t_env;
 
+void				add_option(char c, t_opt **opt);;
 void				set_opt_dir(t_env *e, int ac, char **av);
 void				displayf(t_file **file);
 void				display_dir(t_dir **dir, t_opt *option);
@@ -71,7 +74,7 @@ void				display_name(t_dir *dir);
 void				add_lst_file(t_file **file, char *path);
 void				add_lst_dir(t_dir **dir, char *path);
 
-void				sort_time(t_file **begin, char *path);
+void				sort_time(t_file **begin);
 
 void				retrieve_dot_files(t_file **begin);
 void				sort_path(t_file **begin);
@@ -85,11 +88,14 @@ int					get_width_buf(t_file *lst);
 void				put_total(int total);
 void				ft_error_option(void);
 void				release_lst_file(t_file *lst);
-int					compare(char *path1, char *path2);
+int					compare(t_file *curr, t_file *next);
 void				put_st_mod(mode_t mode, char *path);
 void				print_links(nlink_t link);
 void				print_user(uid_t user);
 void				print_group(gid_t group);
 void				display_name(t_dir *dir);
+t_file				*create_file(char *path);
+t_dir				*create_dir(char *path);
+
 
 #endif

@@ -12,66 +12,19 @@
 
 #include "ft_ls.h"
 
-void		retrieve_dot_files(t_file **begin)
+void				add_option(char c, t_opt **opt)
 {
-	t_file *lst;
-	t_file *tmp;
-
-	lst = *begin;
-	while (lst && lst->path[0] == '.')
-		lst = lst->next;
-	*begin = lst;
-	while (lst && lst->next)
-	{
-		tmp = lst->next;
-		if (tmp->path[0] == '.')
-			lst->next = tmp->next;
-		else
-			lst = lst->next;
-	}
-}
-
-void		sort_path(t_file **begin)
-{
-	t_file *lst;
-	t_file *tmp;
-
-	lst = *begin;
-	tmp = NULL;
-	while (lst && lst->next)
-	{
-		if (ft_strcmp(lst->path, lst->next->path) > 0)
-		{
-			add_lst_file(&tmp, lst->next->path);
-			free(lst->next);
-			lst->next = NULL;
-			break ;
-		}
-		else
-			lst = lst->next;
-	}
-	lst = *begin;
-	*begin = tmp;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = malloc(sizeof(t_file));
-	tmp->next = lst;
-}
-
-void		display_files(t_file **file, t_opt *option)
-{
-	t_file *lst;
-
-	lst = (*file);
-	sort_path(&lst);
-	if (option->a == 0)
-		retrieve_dot_files(&lst);
-	if (option->t == 1)
-		sort_time(&lst);
-	if (option->r == 1)
-		reverse_lst(&lst);
-	if (option->l == 1)
-		displayf_l(&lst);
+	if (c == 'l')
+		(*opt)->l = 1;
+	else if (c == 'a')
+		(*opt)->a = 1;
+	else if (c == 'R')
+		(*opt)->rc = 1;
+	else if (c == 'r')
+		(*opt)->r = 1;
+	else if (c == 't')
+		(*opt)->t = 1;
 	else
-		displayf(&lst);
+		ft_error_option();
 }
+
