@@ -29,13 +29,36 @@ void			print_acl(mode_t mode, char *path)
 		ft_putchar(' ');
 }
 
-void			put_st_mod(mode_t mode, char *path)
+int check_is_link(char *file, char *direc)
+{
+	DIR				*dirp;
+	struct dirent	*dir;
+	struct stat		tmp;
+
+	dirp = opendir(direc);
+	while ((dir = readdir(dirp)) != NULL)
+	{
+		if (ft_strcmp(dir->d_name, file) == 0)
+		{
+			if (dir->d_type == DT_LNK &&
+				(lstat(JOIN(JOIN(direc, "/"), file), &tmp) == 0))
+			{
+				return (1);
+			}
+			else
+				return (0);
+		}
+	}
+	return (0);
+
+}
+void			put_st_mod(mode_t mode, char *path, char *dir)
 {
 	if (S_ISDIR(mode))
 		ft_putchar('d');
-	else if (S_ISLNK(mode))
+	else if (check_is_link(path, dir))
 		ft_putchar('l');
-	else
+	else if (S_ISREG(mode))
 		ft_putchar('-');
 	mode = mode & ~S_IFMT;
 	(mode & S_IRUSR) ? ft_putchar('r') : ft_putchar('-');
@@ -47,7 +70,6 @@ void			put_st_mod(mode_t mode, char *path)
 	(mode & S_IROTH) ? ft_putchar('r') : ft_putchar('-');
 	(mode & S_IWOTH) ? ft_putchar('w') : ft_putchar('-');
 	(mode & S_IXOTH) ? ft_putchar('x') : ft_putchar('-');
-	(void)path;
 }
 
 void			print_links(nlink_t link)

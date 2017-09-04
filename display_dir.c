@@ -90,6 +90,31 @@ void			displayf(t_file **file)
 	write(1, "\n", 1);
 }
 
+void get_end_string(char *path)
+{
+	int i;
+
+	i = ft_strlen(path) - 1;
+	while(path[i] && path[i] != '/')
+		i--;
+	while(path[++i])
+		write(1, &path[i], 1);
+}
+
+int check_permission(char *path)
+{
+	if(access(path, R_OK) == 0)
+		return (1);
+	else
+	{
+		write(1, "ls: ", 4);
+		get_end_string(path);
+		write(1, ": Persmission denied\n", 21);
+		return (0);
+	}
+}
+
+
 void			display_dir(t_dir **dir, t_opt *option)
 {
 	t_dir *lst;
@@ -98,6 +123,8 @@ void			display_dir(t_dir **dir, t_opt *option)
 	lst = (*dir);
 	if (lst)
 	{
+		if(!check_permission(lst->path))
+			return ;
 		get_all_files(&lst, option->a);
 		if (option->l)
 			put_total(lst->total);

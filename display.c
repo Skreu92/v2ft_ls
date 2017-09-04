@@ -12,7 +12,7 @@
 
 #include "ft_ls.h"
 
-void				add_option(char c, t_opt **opt)
+void					add_option(char c, t_opt **opt)
 {
 	if (c == 'l')
 		(*opt)->l = 1;
@@ -25,6 +25,30 @@ void				add_option(char c, t_opt **opt)
 	else if (c == 't')
 		(*opt)->t = 1;
 	else
+	{
 		ft_error_option();
+		exit(0);
+	}
 }
 
+void					set_opt_dir(t_env *e, int ac, char **av)
+{
+	int i;
+	int j;
+
+	i = 1;
+	e->files = NULL;
+	e->dir = NULL;
+	while (i < ac)
+	{
+		j = 0;
+		if (av[i][0] == '-' && !e->files && !e->dir)
+			while (av[i][++j])
+				add_option(av[i][j], &e->option);
+		else
+			add_file_dir(av[i], e);
+		i++;
+	}
+	if (e->files == NULL && e->dir == NULL && e->error == 0)
+		add_file_dir(".", e);
+}

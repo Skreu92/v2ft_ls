@@ -31,6 +31,7 @@ static void			init_env(t_env *e)
 	e->option->r = 0;
 	e->option->l = 0;
 	e->option->t = 0;
+	e->error = 0;
 }
 
 void				file_free(t_file *file)

@@ -11,8 +11,7 @@
 # **************************************************************************** #
 
 
-FLAGS= -Wall -Werror -Wextra 
-/*-O0 -g -fsanitize=address*/
+FLAGS= -Wall -Werror -Wextra -O0 -g -fsanitize=address
 
 
 SRC= main.c\

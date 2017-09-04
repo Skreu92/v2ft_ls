@@ -12,7 +12,7 @@
 
 #include "ft_ls.h"
 
-t_file		*create_file(char *path)
+t_file					*create_file(char *path)
 {
 	t_file *file;
 
@@ -22,7 +22,7 @@ t_file		*create_file(char *path)
 	return (file);
 }
 
-t_dir		*create_dir(char *path)
+t_dir					*create_dir(char *path)
 {
 	t_dir *dir;
 
@@ -88,30 +88,14 @@ void					add_file_dir(char *path, t_env *e)
 	}
 	else
 	{
-		write(1, "ls: ", 4);
-		write(1, path, ft_strlen(path));
-		write(1, "No such file or directory\n", 26);
-	}
-}
-
-void					set_opt_dir(t_env *e, int ac, char **av)
-{
-	int i;
-	int j;
-
-	i = 1;
-	e->files = NULL;
-	e->dir = NULL;
-	while (i < ac)
-	{
-		j = 0;
-		if (av[i][0] == '-' && !e->files && !e->dir)
-			while (av[i][++j])
-				add_option(av[i][j], &e->option);
+		e->error++;
+		if(!check_permission(path))
+			return ;
 		else
-			add_file_dir(av[i], e);
-		i++;
+		{
+			write(1, "ls: ", 4);
+			write(1, path, ft_strlen(path));
+			write(1, ": No such file or directory\n", 28);
+		}
 	}
-	if (e->files == NULL && e->dir == NULL)
-		add_file_dir(".", e);
 }

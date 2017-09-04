@@ -117,16 +117,16 @@ void				displayf_l(t_file **begin, char *path)
 	{
 		tmp2 = ft_strjoin(path, "/");
 		tmp = ft_strjoin(tmp2, file->path);
-		stat(tmp, &info);
 		if (stat(tmp, &info) == -1)
 			lstat(tmp, &info);
-		put_st_mod(info.st_mode, tmp);
+		put_st_mod(info.st_mode, file->path, path);
 		print_links(info.st_nlink);
 		print_user(info.st_uid);
 		print_group(info.st_gid);
 		print_size(info.st_size);
 		print_date(info.st_mtime);
 		ft_putstr(file->path);
+		check_lnk(path, file->path);
 		write(1, "\n", 1);
 		file = file->next;
 		free(tmp);
